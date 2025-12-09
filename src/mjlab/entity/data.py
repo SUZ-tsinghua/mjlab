@@ -119,6 +119,7 @@ class EntityData:
 
     self.write_joint_position(position, joint_ids, env_ids)
     self.write_joint_velocity(velocity, joint_ids, env_ids)
+    self.clear_joint_acc(joint_ids, env_ids)
 
   def write_joint_position(
     self,
@@ -193,11 +194,18 @@ class EntityData:
     v_slice = self.indexing.free_joint_v_adr
     self.data.qfrc_applied[env_ids, v_slice] = 0.0
     self.data.xfrc_applied[env_ids, self.indexing.body_ids] = 0.0
+    self.data.qacc_warmstart[env_ids, v_slice] = 0.0
 
     if self.is_actuated:
       self.joint_pos_target[env_ids] = 0.0
       self.joint_vel_target[env_ids] = 0.0
       self.joint_effort_target[env_ids] = 0.0
+
+  def clear_joint_acc(self, joint_ids: torch.Tensor | slice | None = None, env_ids: torch.Tensor | slice | None = None) -> None:
+    env_ids = self._resolve_env_ids(env_ids)
+    joint_ids = joint_ids if joint_ids is not None else slice(None)
+    a_slice = self.indexing.joint_v_adr[joint_ids]
+    self.data.qacc_warmstart[env_ids, a_slice] = 0.0
 
   def _resolve_env_ids(
     self, env_ids: torch.Tensor | slice | None
