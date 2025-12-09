@@ -83,6 +83,7 @@ class RewardManager(ManagerBase):
         self._step_reward[:, term_idx] = 0.0
         continue
       value = term_cfg.func(self._env, **term_cfg.params) * term_cfg.weight * dt
+      value[value.isnan()] = 0.0
       self._reward_buf += value
       self._episode_sums[name] += value
       self._step_reward[:, term_idx] = value / dt
