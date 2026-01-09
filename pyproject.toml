@@ -59,6 +59,7 @@ play = "mjlab.scripts.play:main"
 demo = "mjlab.scripts.demo:main"
 list_envs = "mjlab.scripts.list_envs:main"
 viz-nan = "mjlab.scripts.nan_viz:main"
+csv_to_npz = "mjlab.scripts.csv_to_npz:main"
 
 [dependency-groups]
 dev = [
